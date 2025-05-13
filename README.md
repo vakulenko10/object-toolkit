@@ -1,1 +1,1 @@
-**hello that is my OOP object utilities npm package made with typescript**
+**hello that is my object utilities npm package made with typescript**
