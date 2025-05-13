@@ -1,0 +1,1 @@
+**hello that is my OOP object utilities npm package made with typescript**
