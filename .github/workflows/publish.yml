@@ -32,12 +32,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "ci: bump version"
 
-      - name: Override Git Remote with PAT
-        run: git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
+      - name: Override git remote with PAT
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
+          git remote get-url origin
 
-      - name: Debug git remote
-        run: git remote get-url origin
-        
       - name: Push version bump to main
         run: git push origin main
 
