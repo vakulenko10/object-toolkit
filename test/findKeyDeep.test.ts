@@ -345,4 +345,86 @@ describe('findKeyDeep', () => {
 
   expect(timedFind(input, 'secret', 'Set structure')).toBeUndefined();
 });
+it('finds a buried key in a wide and deep object with circular references', () => {
+  const obj: any = {
+    users: Array.from({ length: 100 }, (_, i) => ({
+      id: i,
+      metadata: {
+        flags: [false, true, null],
+        nested: {
+          profile: {
+            preferences: {
+              theme: 'dark',
+              visibility: 'public',
+              settings: {
+                // Wide sibling keys
+                feature1: {},
+                feature2: {},
+                feature3: {},
+              }
+            },
+            activity: {
+              recent: [1, 2, 3],
+              stats: {
+                logins: 10,
+                updates: 5,
+              }
+            }
+          }
+        }
+      }
+    })),
+    structure: {
+      level1: {
+        alpha: { beta: { gamma: {} } },
+        extra1: { unused: true },
+        extra2: { placeholder: false }
+      },
+      level2: {}
+    }
+  };
+
+  // Add circular references
+  obj.structure.level1.alpha.beta.gamma.loop1 = obj.structure;
+  obj.structure.level2.loop2 = obj;
+
+  // Add wide, noisy sibling structure
+  obj.final = {
+    one: {
+      unrelatedA: 'x',
+      unrelatedB: 'y',
+      two: {
+        temp1: {},
+        temp2: {},
+        temp3: {},
+        three: {
+          random1: [],
+          random2: null,
+          random3: {},
+          four: {
+            misc: 'ignored',
+            settings: {
+              dummy1: {},
+              dummy2: {},
+              overrides: {
+                fake1: {},
+                fake2: {},
+                target: {
+                  fake3: {},
+                  notIt: 123,
+                  secret: '🎯 deeply found secret'
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  // Test with safety
+  expect(() => timedFind(obj, 'secret', 'wide & deep with circulars')).not.toThrow();
+  expect(timedFind(obj, 'secret', 'wide & deep with circulars')).toBe('🎯 deeply found secret');
+});
+
 });
