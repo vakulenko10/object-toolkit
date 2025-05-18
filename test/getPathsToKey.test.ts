@@ -140,6 +140,7 @@ describe('getPathsToKey - basic and complex usage', () => {
     expect(() => getPathsToKey(input, 'label')).not.toThrow();
     expect(getPathsToKey(input, 'label')).toEqual([
       'node.label',
+      'node.next.label',
       'meta.label'
     ]);
   });
