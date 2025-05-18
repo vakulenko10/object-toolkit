@@ -1,3 +1,29 @@
+/**
+ * Recursively searches through a deeply nested object or array and returns the value of the first key
+ * that matches the specified key name, using depth-first traversal.
+ *
+ * @param {any} obj - The object or array to search through.
+ * @param {string} targetKey - The name of the key to search for.
+ * @param {WeakSet<object>} [seen=new WeakSet()] - Internal: used to track visited objects and prevent infinite recursion from circular references.
+ * @returns {any} - The value associated with the first matching key found, or undefined if not found.
+ *
+ * @example
+ * findKeyDeep({
+ *   user: {
+ *     profile: {
+ *       name: 'Alice'
+ *     }
+ *   }
+ * }, 'name');
+ * // ➜ 'Alice'
+ *
+ * @example
+ * findKeyDeep({
+ *   a: { b: { c: { target: 42 } } },
+ *   d: { e: 'skip' }
+ * }, 'target');
+ * // ➜ 42
+ */
 export function findKeyDeep(obj: any, targetKey: string, seen = new WeakSet()): any {
   if (typeof obj !== 'object' || obj === null) return undefined;
 

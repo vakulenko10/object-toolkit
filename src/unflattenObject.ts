@@ -1,3 +1,21 @@
+/**
+ * Reconstructs a nested object from a flattened object with dot-notated keys.
+ *
+ * Takes an object where keys represent paths (e.g., `'user.profile.name'`) and builds a deeply nested structure.
+ * You can customize the key separator used for nesting (default is a dot).
+ *
+ * @param {Record<string, any>} flatObj - The flattened object with dot-notated (or custom-separated) keys.
+ * @param {string} [separator='.'] - The string used to split keys into nested levels.
+ * @returns {Record<string, any>} - A reconstructed nested object based on the flattened key paths.
+ *
+ * @example
+ * unflattenObject({ 'user.name': 'Alice', 'user.age': 30 })
+ * // ➜ { user: { name: 'Alice', age: 30 } }
+ *
+ * @example
+ * unflattenObject({ 'a_b_c': 1, 'a_b_d': 2 }, '_')
+ * // ➜ { a: { b: { c: 1, d: 2 } } }
+ */
 export function unflattenObject(
    flatObj: Record<string, any>,
    separator: string = '.'
