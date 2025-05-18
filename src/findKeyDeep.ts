@@ -1,34 +1,19 @@
-export function findKeyDeep(obj:Record<string, any>|any, targetKey:string):any{
-    // console.log(obj, "of type", typeof(obj))
-    if(typeof obj != 'object'){
-        return undefined
+export function findKeyDeep(obj: any, targetKey: string, seen = new WeakSet()): any {
+  if (typeof obj !== 'object' || obj === null) return undefined;
+
+  seen.add(obj);
+
+  for (const key in obj) {
+    if (key === targetKey) return obj[key];
+
+    const value = obj[key];
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) continue;
+
+      const result = findKeyDeep(value, targetKey, seen);
+      if (result !== undefined) return result;
     }
-    for(let key in obj){
-        // console.log('key is: ', key)
-        if(key == targetKey){
-            // console.log('we are returning from first if check')
-            // console.log('the obj[key] found value is: ',obj[key])
-            return obj[key]
-        }
-        if(typeof obj[key] == 'object' && obj[key]!=null){
-            // console.log("type of:", obj[key], 'is', typeof(obj[key]))
-            // console.log('we are moving deeper into recursion')
-            const result = findKeyDeep(obj[key], targetKey);
-             if (result !== undefined) {
-                return result;}
-        }
-        
-        
-    }
-    // console.log('we are returning default undefined')
-    return undefined
+  }
+
+  return undefined;
 }
-const input = {
-      a: null,
-      b: {
-        c: {
-          target: 'found'
-        }
-      }
-    };
-console.log('the returned value is', findKeyDeep(input, 'target'));

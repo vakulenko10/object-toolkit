@@ -288,4 +288,61 @@ describe('findKeyDeep', () => {
     const result = timedFind(input, 'email', 'missing in real data');
     expect(result).toBeUndefined();
   });
+  it('finds a key that is not part of a circular reference (with circular handling)', () => {
+    const obj: any = {
+      a: { b: {} },
+      hidden: { secret: 'you will not find me' }
+    };
+    obj.a.b.loop = obj; // circular reference
+
+    // The function should still not throw
+    expect(() => timedFind(obj, 'secret', 'circular ref')).not.toThrow();
+
+    // ✅ Now that circular references are handled, it should find the key
+    expect(timedFind(obj, 'secret', 'circular ref')).toBe('you will not find me');
+  });
+  it('returns undefined for values stored in a Map (not a plain object)', () => {
+  const input = {
+    users: new Map([
+      ['id1', { email: 'hidden@example.com' }]
+    ])
+  };
+
+  // Map is an object, but your function doesn’t iterate its entries
+  expect(timedFind(input, 'email', 'key inside Map')).toBeUndefined();
+  });
+  it('returns undefined when key is buried in irregular array nesting', () => {
+  const input = {
+    arr: [
+      1,
+      [
+        2,
+        [
+          3,
+          [
+            { level: { level: { almost: { here: 'but no key' } } } }
+          ]
+        ]
+      ]
+    ]
+  };
+
+  expect(timedFind(input, 'missing', 'irregular array nesting')).toBeUndefined();
+  });
+  it('returns undefined if key is on a non-enumerable property', () => {
+  const obj = {};
+  Object.defineProperty(obj, 'invisible', {
+    value: 'can’t see me',
+    enumerable: false
+  });
+
+  expect(timedFind(obj, 'invisible', 'non-enumerable key')).toBeUndefined();
+  });
+  it('returns undefined if key is inside a Set (not supported structure)', () => {
+  const input = {
+    container: new Set([{ secret: 'inside set' }])
+  };
+
+  expect(timedFind(input, 'secret', 'Set structure')).toBeUndefined();
+});
 });
