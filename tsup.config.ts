@@ -3,9 +3,9 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],  // you can keep both formats
+  format: ['esm'], // or ['esm', 'cjs'] if needed
   dts: {
-    entry: 'src/index.ts', // 👈 ensures .d.ts is generated (not .d.cts)
+    entry: 'src/index.ts',  // ✅ forces correct .d.ts generation
   },
   clean: true,
 });
