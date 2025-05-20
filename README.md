@@ -150,7 +150,9 @@ countOccurrences(['a', 'b', 'a']);
 🧪 Testing
 This library is fully tested using Vitest. To run tests:
 
+```bash
 npm run test
+```
 ✅ TypeScript Support
 All utilities are written in TypeScript with complete typings. Example:
 ```bash
