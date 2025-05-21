@@ -158,3 +158,6 @@ All utilities are written in TypeScript with complete typings. Example:
 ```bash
 const email = getValueByPath<string>(user, 'profile.contact.email');
 ```
+
+
+This is an open-source project — feel free to fork the repository, contribute new utilities, suggest improvements, or submit pull requests. Let’s make it better together!
